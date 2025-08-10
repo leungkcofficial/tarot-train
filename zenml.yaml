@@ -1,0 +1,71 @@
+# ZenML configuration for CKD Risk Prediction project
+
+# Default active stack
+active_stack_id: ckd_risk_local_stack
+
+# Stack configurations
+stacks:
+  # Local development stack
+  - name: ckd_risk_local_stack
+    components:
+      # Local orchestrator
+      orchestrator:
+        type: local
+        
+      # Local artifact store
+      artifact_store:
+        type: local
+        path: ./zenml_artifacts
+        
+      # Local container registry
+      container_registry:
+        type: default
+        
+      # Local secrets manager
+      secrets_manager:
+        type: local
+  
+  # Production stack with S3/minio
+  - name: ckd_risk_prod_stack
+    components:
+      # Local orchestrator
+      orchestrator:
+        type: local
+        
+      # S3/minio artifact store
+      artifact_store:
+        type: s3
+        path: s3://ckd-risk-artifacts
+        key: ${MINIO_ACCESS_KEY}
+        secret: ${MINIO_SECRET_KEY}
+        endpoint: ${MINIO_ENDPOINT}
+        
+      # Local container registry
+      container_registry:
+        type: default
+        
+      # Local secrets manager
+      secrets_manager:
+        type: local
+
+# Global configuration
+global:
+  analytics: false
+  store:
+    type: sqlite
+    path: ./.zenml/zenml.db
+
+# Repository settings
+repository:
+  # Track all files in the repository
+  track_git_files: true
+  
+  # Exclude patterns
+  exclude_patterns:
+    - "*.pyc"
+    - "__pycache__/"
+    - "venv/"
+    - "data_lake/"
+    - "metadata/"
+    - "test_output/"
+    - "test_metadata/"

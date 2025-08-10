@@ -1,0 +1,129 @@
+{
+  "total_count": 24,
+  "successful_count": 0,
+  "failed_count": 24,
+  "successful_models": [],
+  "failed_models": [
+    {
+      "model_no": 1,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 2,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 3,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 4,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 5,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 6,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 7,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 8,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 9,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 10,
+      "error": "'event1'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event1'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event1'\n"
+    },
+    {
+      "model_no": 11,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 12,
+      "error": "'event2'",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3805, in get_loc\n    return self._engine.get_loc(casted_key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"index.pyx\", line 167, in pandas._libs.index.IndexEngine.get_loc\n  File \"index.pyx\", line 196, in pandas._libs.index.IndexEngine.get_loc\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item\n  File \"pandas/_libs/hashtable_class_helper.pxi\", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item\nKeyError: 'event2'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 166, in compute_all_baseline_hazards\n    y_event = train_df_for_targets[f'event{event_num}'].values.astype('float32')\n              ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/frame.py\", line 4102, in __getitem__\n    indexer = self.columns.get_loc(key)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goma/miniconda3/envs/ai_dev/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'event2'\n"
+    },
+    {
+      "model_no": 13,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 14,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 15,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 16,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 17,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 18,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 19,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 20,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 21,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 22,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 23,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    },
+    {
+      "model_no": 24,
+      "error": "create_sequences_from_dataframe() got multiple values for argument 'sequence_length'",
+      "traceback": "Traceback (most recent call last):\n  File \"/mnt/dump/yard/projects/tarot2/steps/compute_all_baseline_hazards.py\", line 145, in compute_all_baseline_hazards\n    X_seq, y_seq, seq_keys = create_sequences_from_dataframe(\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: create_sequences_from_dataframe() got multiple values for argument 'sequence_length'\n"
+    }
+  ],
+  "baseline_hazard_files": []
+}

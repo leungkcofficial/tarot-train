@@ -1,0 +1,301 @@
+### DEEPSURV GROUP PREDICTION SHAPES ###
+================================================================================
+Note: DeepSurv predictions shape = (time_points, n_samples)
+================================================================================
+
+Group 1: ANN + KNN + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 9: Ensemble_model9_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 11: Ensemble_model11_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 2: ANN + KNN + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 10: Ensemble_model10_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 12: Ensemble_model12_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 3: ANN + NearMiss version 1 + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 5: Ensemble_model5_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 7: Ensemble_model7_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 4: ANN + NearMiss version 1 + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 6: Ensemble_model6_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 8: Ensemble_model8_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 5: ANN + None + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 1: Ensemble_model1_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 3: Ensemble_model3_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 6: ANN + None + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 2: Ensemble_model2_DeepSurv_ANN_Event_1
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+  Event 2 Models:
+    Model 4: Ensemble_model4_DeepSurv_ANN_Event_2
+      Temporal Test predictions shape: (1825, 42953)
+      Spatial Test predictions shape: (1825, 155042)
+
+Group 7: LSTM + KNN + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 21: Ensemble_model21_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 23: Ensemble_model23_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+Group 8: LSTM + KNN + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 22: Ensemble_model22_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 24: Ensemble_model24_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+Group 9: LSTM + NearMiss version 3 + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 17: Ensemble_model17_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 19: Ensemble_model19_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+Group 10: LSTM + NearMiss version 3 + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 18: Ensemble_model18_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 20: Ensemble_model20_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+Group 11: LSTM + None + Concordance Index
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 13: Ensemble_model13_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 15: Ensemble_model15_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+Group 12: LSTM + None + Log-likelihood
+------------------------------------------------------------
+
+  Event 1 Models:
+    Model 14: Ensemble_model14_DeepSurv_LSTM_Event_1
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+  Event 2 Models:
+    Model 16: Ensemble_model16_DeepSurv_LSTM_Event_2
+      Temporal Test predictions shape: (1825, 4809)
+      Spatial Test predictions shape: (1825, 3125)
+
+================================================================================
+### DEEPHIT MODEL PREDICTION SHAPES ###
+================================================================================
+Note: DeepHit predictions shape = (n_events, time_points, n_samples)
+================================================================================
+
+Ensemble_model25_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model26_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model27_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model28_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model29_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model30_DeepHit_ANN_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 42953)
+    - cause_1_predictions shape: (5, 42953)
+    - cause_2_predictions shape: (5, 42953)
+  Spatial Test:
+    - predictions shape: (2, 5, 155042)
+    - cause_1_predictions shape: (5, 155042)
+    - cause_2_predictions shape: (5, 155042)
+
+Ensemble_model31_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+Ensemble_model32_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+Ensemble_model33_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+Ensemble_model34_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+Ensemble_model35_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+Ensemble_model36_DeepHit_LSTM_Both:
+  Temporal Test:
+    - predictions shape: (2, 5, 4809)
+    - cause_1_predictions shape: (5, 4809)
+    - cause_2_predictions shape: (5, 4809)
+  Spatial Test:
+    - predictions shape: (2, 5, 3125)
+    - cause_1_predictions shape: (5, 3125)
+    - cause_2_predictions shape: (5, 3125)
+
+================================================================================
+### SUMMARY ###
+================================================================================
+
+DeepSurv models:
+  - All models predict for 42,953 samples
+  - Predictions have 1,825 time points
+  - Shape: (1825, 42953)
+
+DeepHit models:
+  - All models predict for 42,953 samples
+  - Predictions have 2 events and 5 time points
+  - Combined predictions shape: (2, 5, 42953)
+  - Individual cause predictions shape: (5, 42953)

@@ -1,0 +1,94 @@
+# Example LSTM Configuration for DeepSurv Model
+# This configuration uses LSTM networks for survival analysis with focus on mortality endpoint
+
+# Model type to use
+model_type: "deepsurv"  # Options: "deepsurv", "deephit"
+
+# Target specific endpoint (mortality in this case)
+target_endpoint: 2  # Options: null (all events), 1 (dialysis), 2 (mortality)
+
+# Network architecture configuration
+network:
+  # Network type: LSTM for temporal sequence modeling
+  type: "lstm"  # Options: "ann" (default MLP), "lstm"
+  
+  # LSTM specific parameters
+  lstm:
+    # Option 1: Single hidden dimension for all layers (simple)
+    hidden_dim: 64        # LSTM hidden dimension for all layers
+    
+    # Option 2: Layer-specific hidden dimensions (advanced, similar to ANN)
+    # hidden_dims: [128, 64, 32]  # Uncomment to use layer-specific dimensions
+    
+    num_layers: 2         # Number of LSTM layers
+    bidirectional: true   # Use bidirectional LSTM
+    sequence_length: 5    # Default sequence length (will be optimized)
+  
+  # DeepHit specific parameters (not used for DeepSurv but kept for compatibility)
+  deephit:
+    alpha: 0.2
+    sigma: 0.1
+    time_grid: [365, 730, 1095, 1460, 1825]
+
+# Hyperparameter search space for optimization
+search_space:
+  # Common parameters for all models
+  common:
+    learning_rate:
+      type: "float"
+      min: 0.0001
+      max: 0.01
+      log: true
+    dropout:
+      type: "float"
+      min: 0.0
+      max: 0.5
+    optimizer:
+      type: "categorical"
+      values: ["Adam", "AdamW"]
+    batch_size:
+      type: "categorical"
+      values: [32, 64, 128, 256]  # Smaller batch sizes for LSTM
+  
+  # LSTM specific search space
+  lstm:
+    sequence:
+      type: "int"
+      min: 3
+      max: 8        # Reasonable range for medical data
+    lstm_hidden_dim:
+      type: "int"
+      min: 32
+      max: 96       # Moderate range for efficiency
+    lstm_num_layers:
+      type: "int"
+      min: 1
+      max: 3        # Avoid overly deep networks
+    bidirectional:
+      type: "categorical"
+      values: [true, false]
+
+# Optimization settings
+optimization:
+  n_trials: 30          # Reduced for LSTM (slower training)
+  patience: 5           # Early stopping patience
+  seed: 42
+  metric: "loglik"      # Optimize log-likelihood
+
+# Class imbalance handling
+balance:
+  enable: false         # Disable for initial experiments
+  method: "near_miss"
+  sampling_strategy: "majority"
+  near_miss_version: 1
+
+# Evaluation settings
+evaluation:
+  dca:
+    enable: true
+    horizons: [365, 730, 1095, 1460, 1825]
+    threshold_grid:
+      start: 0.01
+      stop: 0.50
+      num: 50
+    ipcw: true
