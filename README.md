@@ -1,6 +1,7 @@
 # CKD Risk Prediction MLOps Pipeline
 
 A comprehensive MLOps repository for AI-driven Chronic Kidney Disease (CKD) risk prediction, providing nephrologists and CKD patients with reliable probabilities of starting renal replacement therapy (RRT) and all-cause mortality over 1- to 5-year horizons.
+This is the data training pipeline for the TAROT(The AI-driven Renal Outcome Tracking) study
 
 ## 🎯 Project Overview
 
