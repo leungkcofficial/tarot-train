@@ -85,6 +85,13 @@ model_weights/
 *.pkl
 *.joblib
 
+# Exception for foundation_models directory
+!foundation_models/
+!foundation_models/**/*.pt
+!foundation_models/**/*.pkl
+!foundation_models/**/*.json
+!foundation_models/**/*.npz
+
 # Data files
 data/
 *.csv
