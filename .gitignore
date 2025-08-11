@@ -66,6 +66,7 @@ results/
 # dummy test codes
 tests/
 test/
+test/
 
 # MLflow artifacts
 mlruns/
