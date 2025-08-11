@@ -66,6 +66,9 @@ results/
 # dummy test codes
 tests/
 test/
+
+# Documentation
+docs/
 test/
 
 # MLflow artifacts
