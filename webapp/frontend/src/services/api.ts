@@ -5,6 +5,7 @@
 
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { PredictionResult } from '../contexts/SessionContext';
+import { TemporalPredictionRequest } from './dataTransformation';
 
 // API Configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || '/api/v1';
@@ -151,7 +152,7 @@ export interface ClinicalDisclaimer {
 // API Service Class
 export class ApiService {
   /**
-   * Predict CKD risk for a patient
+   * Predict CKD risk for a patient (legacy format)
    */
   static async predictRisk(request: PredictionRequest): Promise<PredictionResult> {
     try {
@@ -173,6 +174,31 @@ export class ApiService {
         throw new Error(error.message);
       } else {
         throw new Error('Failed to generate prediction. Please check your input and try again.');
+      }
+    }
+  }
+
+  /**
+   * Predict CKD risk using temporal feature matrix (11 features x 10 timepoints)
+   */
+  static async predictTemporalRisk(request: TemporalPredictionRequest): Promise<PredictionResult> {
+    try {
+      const response: AxiosResponse<PredictionResult> = await apiClient.post('/predict/temporal', request);
+      return response.data;
+    } catch (error: any) {
+      console.error('Temporal Prediction API Error:', error);
+      
+      // Extract meaningful error message from API response
+      if (error.response?.data?.message?.message) {
+        throw new Error(error.response.data.message.message);
+      } else if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      } else if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Failed to generate temporal prediction. Please check your input and try again.');
       }
     }
   }

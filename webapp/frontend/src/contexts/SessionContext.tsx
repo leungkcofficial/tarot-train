@@ -11,6 +11,7 @@ export interface Demographics {
   age?: number;
   dateOfBirth?: Date;
   gender: 'male' | 'female' | '';
+  ckdDiagnosisDate?: Date;
 }
 
 export interface LabValue {
@@ -25,7 +26,7 @@ export interface Comorbidity {
   id: string;
   condition: string;
   diagnosed: boolean;
-  date?: Date;
+  diagnosisDate?: Date;
 }
 
 export interface SessionData {

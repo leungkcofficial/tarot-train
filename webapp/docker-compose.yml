@@ -18,7 +18,7 @@ services:
       - ENVIRONMENT=production
       - LOG_LEVEL=INFO
       - MODEL_PATH=/app/models
-      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
       interval: 30s
@@ -38,9 +38,10 @@ services:
         - REACT_APP_API_URL=http://localhost:8000/api/v1
     container_name: tarot-frontend
     ports:
-      - "3000:80"
+      - "3000:80"  # Maps host port 3000 to container port 80
     environment:
       - REACT_APP_API_URL=http://localhost:8000/api/v1
+      - NODE_ENV=production
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/"]
       interval: 30s

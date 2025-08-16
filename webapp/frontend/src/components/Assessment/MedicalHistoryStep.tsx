@@ -18,7 +18,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  TextField
 } from '@mui/material';
 import {
   LocalHospital,
@@ -30,8 +31,12 @@ import {
   BloodtypeOutlined,
   VisibilityOutlined,
   CheckCircle,
-  Warning
+  Warning,
+  MonitorHeart
 } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useSession, Comorbidity } from '../../contexts/SessionContext';
 
 /**
@@ -41,7 +46,10 @@ const MedicalHistoryStep: React.FC = () => {
   const { state, addComorbidity, updateComorbidity, removeComorbidity } = useSession();
   const { comorbidities } = state.data;
 
-  // Comorbidity categories based on Charlson Comorbidity Index and CKD-relevant conditions
+  // Hypertension as separate feature (not part of CCI but required for model)
+  const hypertensionCondition = { id: 'hypertension', label: 'Hypertension', required: true };
+
+  // Comorbidity categories based on Charlson Comorbidity Index (excluding hypertension)
   const comorbidityCategories = [
     {
       category: 'Cardiovascular',
@@ -58,8 +66,7 @@ const MedicalHistoryStep: React.FC = () => {
       icon: <BloodtypeOutlined color="warning" />,
       conditions: [
         { id: 'diabetes_uncomplicated', label: 'Diabetes Mellitus (uncomplicated)', weight: 1 },
-        { id: 'diabetes_complicated', label: 'Diabetes with Complications', weight: 2 },
-        { id: 'hypertension', label: 'Hypertension', weight: 1 }
+        { id: 'diabetes_complicated', label: 'Diabetes with Complications', weight: 2 }
       ]
     },
     {
@@ -117,16 +124,26 @@ const MedicalHistoryStep: React.FC = () => {
       const newCondition: Omit<Comorbidity, 'id'> = {
         condition: conditionId,
         diagnosed: true,
-        date: new Date()
+        diagnosisDate: new Date()
       };
       addComorbidity(newCondition);
     }
   };
 
-  // Calculate Charlson Comorbidity Index score
+  // Update diagnosis date
+  const updateDiagnosisDate = (conditionId: string, date: Date | null) => {
+    const existing = comorbidities.find((condition: Comorbidity) => condition.condition === conditionId);
+    if (existing && date) {
+      updateComorbidity(existing.id, {
+        diagnosisDate: date
+      });
+    }
+  };
+
+  // Calculate Charlson Comorbidity Index score (excluding hypertension)
   const calculateCharlsonScore = (): number => {
     return comorbidities
-      .filter((condition: Comorbidity) => condition.diagnosed)
+      .filter((condition: Comorbidity) => condition.diagnosed && condition.condition !== 'hypertension')
       .reduce((total, condition) => {
         // Find weight from comorbidityCategories based on condition
         for (const category of comorbidityCategories) {
@@ -171,19 +188,91 @@ const MedicalHistoryStep: React.FC = () => {
   };
 
   const riskInterpretation = getRiskInterpretation(charlsonScore);
+  const hasHypertension = isConditionSelected('hypertension');
+  const hypertensionData = comorbidities.find(c => c.condition === 'hypertension');
 
   return (
-    <Box className="form-section">
-      <Typography variant="h5" className="form-section-title">
-        <LocalHospital />
-        Medical History
-        <Chip label="Optional" size="small" color="info" sx={{ ml: 2 }} />
-      </Typography>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Box className="form-section">
+        <Typography variant="h5" className="form-section-title">
+          <LocalHospital />
+          Medical History
+          <Chip label="Required" size="small" color="error" sx={{ ml: 2 }} />
+        </Typography>
 
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Select any diagnosed medical conditions to improve prediction accuracy. This step is optional but recommended 
-        for more personalized risk assessment using the Charlson Comorbidity Index.
-      </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          Select diagnosed medical conditions and provide diagnosis dates. Hypertension status is required for model accuracy.
+          Other conditions improve prediction accuracy using the Charlson Comorbidity Index.
+        </Typography>
+
+        {/* Hypertension Section (Required) */}
+        <Card sx={{ mb: 3, bgcolor: hasHypertension ? 'success.50' : 'warning.50' }}>
+          <CardContent>
+            <Box display="flex" alignItems="center" gap={2} mb={2}>
+              <MonitorHeart color="primary" />
+              <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
+                Hypertension Status
+              </Typography>
+              <Chip label="Required" size="small" color="error" />
+            </Box>
+            
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Hypertension status is required as a separate model feature (not included in Charlson score).
+            </Typography>
+            
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={12} md={6}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={hasHypertension}
+                      onChange={() => toggleCondition('hypertension', 'Hypertension', 0)}
+                    />
+                  }
+                  label={
+                    <Typography variant="body1" sx={{ fontWeight: hasHypertension ? 600 : 400 }}>
+                      Patient has diagnosed hypertension
+                    </Typography>
+                  }
+                />
+              </Grid>
+              
+              {hasHypertension && (
+                <Grid item xs={12} md={6}>
+                  <DatePicker
+                    label="Diagnosis Date"
+                    value={hypertensionData?.diagnosisDate || null}
+                    onChange={(date) => updateDiagnosisDate('hypertension', date)}
+                    maxDate={new Date()}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        size: 'small',
+                        helperText: 'When was hypertension first diagnosed?'
+                      }
+                    }}
+                  />
+                </Grid>
+              )}
+            </Grid>
+            
+            {hasHypertension && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  ✓ Hypertension status recorded - Required information complete
+                </Typography>
+              </Alert>
+            )}
+            
+            {!hasHypertension && (
+              <Alert severity="info" sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  Please indicate hypertension status to continue
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
 
       {/* Current Status Summary */}
       <Alert severity="info" sx={{ mb: 3 }}>
@@ -238,56 +327,75 @@ const MedicalHistoryStep: React.FC = () => {
             <Grid container spacing={2}>
               {category.conditions.map((condition) => {
                 const isSelected = isConditionSelected(condition.id);
+                const conditionData = comorbidities.find(c => c.condition === condition.id);
                 
                 return (
-                  <Grid item xs={12} md={6} key={condition.id}>
+                  <Grid item xs={12} key={condition.id}>
                     <Card 
                       variant="outlined" 
                       sx={{ 
-                        cursor: 'pointer',
                         bgcolor: isSelected ? 'primary.50' : 'inherit',
-                        borderColor: isSelected ? 'primary.main' : 'divider',
-                        '&:hover': { borderColor: 'primary.main' }
+                        borderColor: isSelected ? 'primary.main' : 'divider'
                       }}
-                      onClick={() => toggleCondition(condition.id, condition.label, condition.weight)}
                     >
-                      <CardContent sx={{ py: 2 }}>
-                        <Box display="flex" alignItems="flex-start" gap={2}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={isSelected}
-                                onChange={() => toggleCondition(condition.id, condition.label, condition.weight)}
-                                onClick={(e) => e.stopPropagation()}
+                      <CardContent>
+                        <Grid container spacing={2} alignItems="center">
+                          <Grid item xs={12} md={6}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={isSelected}
+                                    onChange={() => toggleCondition(condition.id, condition.label, condition.weight)}
+                                  />
+                                }
+                                label=""
+                                sx={{ m: 0 }}
                               />
-                            }
-                            label=""
-                            sx={{ m: 0 }}
-                          />
-                          
-                          <Box flex={1}>
-                            <Typography 
-                              variant="body2" 
-                              sx={{ 
-                                fontWeight: isSelected ? 600 : 400,
-                                mb: 1 
-                              }}
-                            >
-                              {condition.label}
-                            </Typography>
-                            
-                            <Box display="flex" alignItems="center" gap={1}>
-                              <Chip
-                                label={`${condition.weight} point${condition.weight > 1 ? 's' : ''}`}
-                                size="small"
-                                color={condition.weight >= 3 ? 'error' : condition.weight >= 2 ? 'warning' : 'info'}
-                              />
-                              {isSelected && (
-                                <CheckCircle color="success" fontSize="small" />
-                              )}
+                              
+                              <Box flex={1}>
+                                <Typography 
+                                  variant="body2" 
+                                  sx={{ 
+                                    fontWeight: isSelected ? 600 : 400,
+                                    mb: 1 
+                                  }}
+                                >
+                                  {condition.label}
+                                </Typography>
+                                
+                                <Box display="flex" alignItems="center" gap={1}>
+                                  <Chip
+                                    label={`${condition.weight} point${condition.weight > 1 ? 's' : ''}`}
+                                    size="small"
+                                    color={condition.weight >= 3 ? 'error' : condition.weight >= 2 ? 'warning' : 'info'}
+                                  />
+                                  {isSelected && (
+                                    <CheckCircle color="success" fontSize="small" />
+                                  )}
+                                </Box>
+                              </Box>
                             </Box>
-                          </Box>
-                        </Box>
+                          </Grid>
+                          
+                          {isSelected && (
+                            <Grid item xs={12} md={6}>
+                              <DatePicker
+                                label="Diagnosis Date"
+                                value={conditionData?.diagnosisDate || null}
+                                onChange={(date) => updateDiagnosisDate(condition.id, date)}
+                                maxDate={new Date()}
+                                slotProps={{
+                                  textField: {
+                                    size: 'small',
+                                    fullWidth: true,
+                                    helperText: 'When was this condition diagnosed?'
+                                  }
+                                }}
+                              />
+                            </Grid>
+                          )}
+                        </Grid>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -345,22 +453,23 @@ const MedicalHistoryStep: React.FC = () => {
       {/* Guidance */}
       <Alert severity="info" sx={{ mt: 3 }}>
         <Typography variant="body2">
-          <strong>Note:</strong> Medical history improves prediction accuracy but is not required. 
-          You can proceed to risk analysis with or without this information. Only select conditions 
-          that have been formally diagnosed by a healthcare provider.
+          <strong>Note:</strong> Hypertension status is required for accurate predictions. 
+          Additional medical history (Charlson conditions) is optional but improves prediction accuracy.
+          Only select conditions that have been formally diagnosed by a healthcare provider.
         </Typography>
       </Alert>
 
       {/* Summary */}
-      <Box sx={{ mt: 4, p: 2, bgcolor: 'info.50', borderRadius: 2 }}>
+      <Box sx={{ mt: 4, p: 2, bgcolor: hasHypertension ? 'success.50' : 'warning.50', borderRadius: 2 }}>
         <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
           Medical History Summary:
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           <Chip
-            label={`${selectedConditions.length} Conditions Selected`}
-            color={selectedConditions.length > 0 ? 'primary' : 'default'}
+            label={hasHypertension ? 'Hypertension: Yes' : 'Hypertension: Please specify'}
+            color={hasHypertension ? 'success' : 'error'}
             size="small"
+            sx={{ fontWeight: 600 }}
           />
           <Chip
             label={`Charlson Score: ${charlsonScore}`}
@@ -368,8 +477,13 @@ const MedicalHistoryStep: React.FC = () => {
             size="small"
           />
           <Chip
-            label="Ready to proceed"
-            color="success"
+            label={`Additional Conditions: ${selectedConditions.filter(c => c.condition !== 'hypertension').length}`}
+            color="info"
+            size="small"
+          />
+          <Chip
+            label={hasHypertension ? 'Ready to proceed' : 'Incomplete'}
+            color={hasHypertension ? 'success' : 'warning'}
             size="small"
             sx={{ fontWeight: 600 }}
           />
@@ -377,13 +491,22 @@ const MedicalHistoryStep: React.FC = () => {
       </Box>
 
       {/* Next Steps */}
-      <Alert severity="success" sx={{ mt: 3 }}>
-        <Typography variant="body2">
-          <strong>Ready for Risk Analysis!</strong> All required information has been collected. 
-          The next step will generate personalized CKD progression risk predictions using our ensemble AI models.
-        </Typography>
-      </Alert>
-    </Box>
+      {hasHypertension ? (
+        <Alert severity="success" sx={{ mt: 3 }}>
+          <Typography variant="body2">
+            <strong>Ready for Risk Analysis!</strong> All required information has been collected. 
+            The next step will generate personalized CKD progression risk predictions using our ensemble AI models.
+          </Typography>
+        </Alert>
+      ) : (
+        <Alert severity="warning" sx={{ mt: 3 }}>
+          <Typography variant="body2">
+            <strong>Hypertension Status Required:</strong> Please specify hypertension diagnosis status above to proceed to risk analysis.
+          </Typography>
+        </Alert>
+      )}
+      </Box>
+    </LocalizationProvider>
   );
 };
 

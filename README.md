@@ -326,9 +326,7 @@ This project contains proprietary AI models and clinical algorithms. Please refe
 ## 📞 Contact
 
 For technical questions or clinical collaboration:
-- **Research Team**: [Contact Information]
 - **Technical Issues**: GitHub Issues
-- **Clinical Inquiries**: [Clinical Contact]
 
 ---
 

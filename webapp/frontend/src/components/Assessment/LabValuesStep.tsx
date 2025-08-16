@@ -19,7 +19,12 @@ import {
   Divider,
   Tooltip,
   IconButton,
-  LinearProgress
+  LinearProgress,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction
 } from '@mui/material';
 import {
   Biotech,
@@ -29,7 +34,9 @@ import {
   Timeline,
   Warning,
   CheckCircle,
-  Error
+  Error,
+  Add,
+  Delete
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -51,9 +58,9 @@ const LabValuesStep: React.FC = () => {
     {
       parameter: 'creatinine',
       label: 'Serum Creatinine',
-      units: ['mg/dL', 'µmol/L'],
-      defaultUnit: 'mg/dL',
-      normalRange: '0.6-1.4 mg/dL',
+      units: ['µmol/L', 'mg/dL'],
+      defaultUnit: 'µmol/L',
+      normalRange: '53-115 µmol/L',
       description: 'Used for eGFR calculation (CKD-EPI 2021)',
       required: true,
       icon: <Calculate />
@@ -71,9 +78,9 @@ const LabValuesStep: React.FC = () => {
     {
       parameter: 'phosphate',
       label: 'Serum Phosphate',
-      units: ['mg/dL', 'mmol/L'],
-      defaultUnit: 'mg/dL',
-      normalRange: '2.5-4.5 mg/dL',
+      units: ['mmol/L', 'mg/dL'],
+      defaultUnit: 'mmol/L',
+      normalRange: '0.8-1.5 mmol/L',
       description: 'Mineral metabolism marker',
       required: true,
       icon: <Biotech />
@@ -82,11 +89,21 @@ const LabValuesStep: React.FC = () => {
       parameter: 'bicarbonate',
       label: 'Serum Bicarbonate',
       units: ['mEq/L', 'mmol/L'],
-      defaultUnit: 'mEq/L',
+      defaultUnit: 'mmol/L',
       normalRange: '22-28 mEq/L',
       description: 'Acid-base balance marker',
       required: true,
       icon: <Timeline />
+    },
+    {
+      parameter: 'albumin',
+      label: 'Serum Albumin',
+      units: ['g/L', 'g/dL'],
+      defaultUnit: 'g/L',
+      normalRange: '35-50 g/L',
+      description: 'Nutritional and synthetic marker',
+      required: true,
+      icon: <Biotech />
     },
     {
       parameter: 'uacr',
@@ -94,9 +111,10 @@ const LabValuesStep: React.FC = () => {
       units: ['mg/g', 'mg/mmol'],
       defaultUnit: 'mg/g',
       normalRange: '<30 mg/g',
-      description: 'Preferred proteinuria marker',
-      required: false,
-      icon: <Biotech />
+      description: 'Preferred proteinuria marker (takes priority over UPCR)',
+      required: false, // Made optional since UPCR can substitute
+      icon: <Biotech />,
+      specialRequired: 'uacr_or_upcr'
     },
     {
       parameter: 'upcr',
@@ -104,15 +122,22 @@ const LabValuesStep: React.FC = () => {
       units: ['mg/g', 'g/g'],
       defaultUnit: 'mg/g',
       normalRange: '<150 mg/g',
-      description: 'Alternative proteinuria marker (converted to UACR)',
+      description: 'Alternative proteinuria marker (used if UACR not available)',
       required: false,
-      icon: <Biotech />
+      icon: <Biotech />,
+      specialRequired: 'uacr_or_upcr'
     }
   ];
 
-  // Get current value for a parameter
+  // Get current values for a parameter (supporting multiple time points)
+  const getCurrentValues = (parameter: string) => {
+    return labValues.filter(lab => lab.parameter === parameter).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+  
+  // Get most recent value for a parameter
   const getCurrentValue = (parameter: string) => {
-    return labValues.find(lab => lab.parameter === parameter);
+    const values = getCurrentValues(parameter);
+    return values.length > 0 ? values[0] : undefined;
   };
 
   // Update lab value
@@ -151,6 +176,28 @@ const LabValuesStep: React.FC = () => {
     }
   };
 
+  // Add new lab entry for a parameter
+  const addNewLabEntry = (parameter: string) => {
+    const paramConfig = labParameters.find(p => p.parameter === parameter);
+    const newLabValue: Omit<LabValue, 'id'> = {
+      parameter,
+      value: '',
+      unit: paramConfig?.defaultUnit || '',
+      date: new Date(),
+    };
+    addLabValue(newLabValue);
+  };
+
+  // Update specific lab entry
+  const updateSpecificLabEntry = (id: string, updates: Partial<LabValue>) => {
+    updateLabValueContext(id, updates);
+  };
+
+  // Remove specific lab entry
+  const removeSpecificLabEntry = (id: string) => {
+    removeLabValue(id);
+  };
+
   // Validate inputs periodically
   useEffect(() => {
     const validateInputs = async () => {
@@ -175,18 +222,16 @@ const LabValuesStep: React.FC = () => {
   // Check if required parameters are complete
   const requiredParams = labParameters.filter(p => p.required);
   const completedRequired = requiredParams.filter(param => {
-    const value = getCurrentValue(param.parameter);
-    return value && value.value !== '' && value.value !== 0;
+    const values = getCurrentValues(param.parameter);
+    return values.some(value => value && value.value !== '' && value.value !== 0);
   });
 
-  // Check if at least one urine parameter is provided
-  const urineParams = labParameters.filter(p => ['uacr', 'upcr'].includes(p.parameter));
-  const hasUrineParam = urineParams.some(param => {
-    const value = getCurrentValue(param.parameter);
-    return value && value.value !== '' && value.value !== 0;
-  });
+  // Check for special requirements (UACR OR UPCR)
+  const hasUacrOrUpcr = 
+    getCurrentValues('uacr').some(value => value && value.value !== '' && value.value !== 0) ||
+    getCurrentValues('upcr').some(value => value && value.value !== '' && value.value !== 0);
 
-  const isStepComplete = completedRequired.length === requiredParams.length && hasUrineParam;
+  const isStepComplete = completedRequired.length === requiredParams.length && hasUacrOrUpcr;
 
   // Get validation status for a parameter
   const getValidationStatus = (parameter: string) => {
@@ -217,6 +262,128 @@ const LabValuesStep: React.FC = () => {
     return null;
   };
 
+  // Render multiple entries for a parameter
+  const renderParameterEntries = (param: any) => {
+    const currentValues = getCurrentValues(param.parameter);
+    const validationStatus = getValidationStatus(param.parameter);
+    
+    return (
+      <Grid item xs={12} key={param.parameter}>
+        <Card variant="outlined">
+          <CardContent>
+            <Box display="flex" alignItems="center" gap={1} mb={2}>
+              {param.icon}
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, flex: 1 }}>
+                {param.label}
+              </Typography>
+              <Tooltip title={param.description}>
+                <IconButton size="small">
+                  <Info fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              {validationStatus === 'success' && <CheckCircle color="success" fontSize="small" />}
+              {validationStatus === 'warning' && <Warning color="warning" fontSize="small" />}
+              {validationStatus === 'error' && <Error color="error" fontSize="small" />}
+              {param.required && <Chip label="Required" size="small" color="error" />}
+              {param.specialRequired === 'uacr_or_upcr' && <Chip label="UACR or UPCR" size="small" color="warning" />}
+            </Box>
+            
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+              Normal range: {param.normalRange} | {param.description}
+            </Typography>
+            
+            {/* Existing entries */}
+            {currentValues.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Recorded Values ({currentValues.length}):
+                </Typography>
+                <List dense>
+                  {currentValues.map((labValue, index) => (
+                    <ListItem key={labValue.id} sx={{ px: 0 }}>
+                      <Grid container spacing={2} alignItems="center">
+                        <Grid item xs={3}>
+                          <TextField
+                            label="Value"
+                            type="number"
+                            size="small"
+                            value={labValue.value || ''}
+                            onChange={(e) => updateSpecificLabEntry(labValue.id, { value: parseFloat(e.target.value) || '' })}
+                            inputProps={{ step: 'any', min: 0 }}
+                            error={validationStatus === 'error'}
+                          />
+                        </Grid>
+                        <Grid item xs={3}>
+                          <FormControl size="small" fullWidth>
+                            <InputLabel>Unit</InputLabel>
+                            <Select
+                              value={labValue.unit}
+                              onChange={(e) => updateSpecificLabEntry(labValue.id, { unit: e.target.value })}
+                              label="Unit"
+                            >
+                              {param.units.map((unit: string) => (
+                                <MenuItem key={unit} value={unit}>
+                                  {unit}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <DatePicker
+                            label="Date"
+                            value={new Date(labValue.date)}
+                            onChange={(date) => date && updateSpecificLabEntry(labValue.id, { date })}
+                            maxDate={new Date()}
+                            slotProps={{
+                              textField: {
+                                size: 'small',
+                                fullWidth: true
+                              }
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={2}>
+                          <IconButton
+                            onClick={() => removeSpecificLabEntry(labValue.id)}
+                            disabled={currentValues.length === 1 && param.required}
+                            color="error"
+                            size="small"
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+            
+            {/* Add new entry button */}
+            <Button
+              startIcon={<Add />}
+              onClick={() => addNewLabEntry(param.parameter)}
+              variant="outlined"
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              Add {currentValues.length === 0 ? 'Value' : 'Another Time Point'}
+            </Button>
+            
+            {currentValues.length === 0 && param.required && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  This parameter is required. Please add at least one value.
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  };
+
   const egfrInfo = calculateEGFR();
 
   return (
@@ -229,7 +396,8 @@ const LabValuesStep: React.FC = () => {
         </Typography>
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Enter recent laboratory results (within the last 6 months). All required values and at least one urine parameter (UACR or UPCR) must be provided.
+          Enter recent laboratory results (within the last 6 months). You can add multiple time points for each parameter. 
+          All required values must be provided, with at least one entry per parameter.
         </Typography>
 
         {/* Progress indicator */}
@@ -258,193 +426,24 @@ const LabValuesStep: React.FC = () => {
           </Alert>
         )}
 
-        {/* Required Parameters */}
-        <Accordion defaultExpanded sx={{ mb: 3 }}>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Required Laboratory Tests
-              </Typography>
-              <Chip
-                label={`${completedRequired.length}/${requiredParams.length} Complete`}
-                color={completedRequired.length === requiredParams.length ? 'success' : 'warning'}
-                size="small"
-              />
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={3}>
-              {requiredParams.map((param) => {
-                const currentValue = getCurrentValue(param.parameter);
-                const validationStatus = getValidationStatus(param.parameter);
-                
-                return (
-                  <Grid item xs={12} md={6} key={param.parameter}>
-                    <Card variant="outlined" sx={{ height: '100%' }}>
-                      <CardContent>
-                        <Box display="flex" alignItems="center" gap={1} mb={2}>
-                          {param.icon}
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                            {param.label}
-                          </Typography>
-                          <Tooltip title={param.description}>
-                            <IconButton size="small">
-                              <Info fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          {validationStatus === 'success' && <CheckCircle color="success" fontSize="small" />}
-                          {validationStatus === 'warning' && <Warning color="warning" fontSize="small" />}
-                          {validationStatus === 'error' && <Error color="error" fontSize="small" />}
-                        </Box>
-                        
-                        <Box display="flex" gap={2} mb={2}>
-                          <TextField
-                            label="Value"
-                            type="number"
-                            value={currentValue?.value || ''}
-                            onChange={(e) => handleValueChange(param.parameter, e.target.value)}
-                            inputProps={{ step: 'any', min: 0 }}
-                            sx={{ flex: 1 }}
-                            error={validationStatus === 'error'}
-                          />
-                          
-                          <FormControl sx={{ minWidth: 100 }}>
-                            <InputLabel>Unit</InputLabel>
-                            <Select
-                              value={currentValue?.unit || param.defaultUnit}
-                              onChange={(e) => handleUnitChange(param.parameter, e.target.value)}
-                              label="Unit"
-                            >
-                              {param.units.map((unit) => (
-                                <MenuItem key={unit} value={unit}>
-                                  {unit}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Box>
-                        
-                        <DatePicker
-                          label="Test Date"
-                          value={currentValue?.date ? new Date(currentValue.date) : new Date()}
-                          onChange={(date) => handleDateChange(param.parameter, date)}
-                          maxDate={new Date()}
-                          slotProps={{
-                            textField: {
-                              size: 'small',
-                              fullWidth: true
-                            }
-                          }}
-                        />
-                        
-                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                          Normal range: {param.normalRange}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
+        {/* Laboratory Parameters */}
+        <Box sx={{ mb: 3 }}>
+          <Box display="flex" alignItems="center" gap={2} mb={3}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Laboratory Parameters
+            </Typography>
+            <Chip
+              label={`${completedRequired.length}/${requiredParams.length} Required Complete`}
+              color={completedRequired.length === requiredParams.length ? 'success' : 'warning'}
+              size="small"
+            />
+          </Box>
+          
+          <Grid container spacing={3}>
+            {labParameters.map((param) => renderParameterEntries(param))}
+          </Grid>
+        </Box>
 
-        {/* Urine Parameters */}
-        <Accordion sx={{ mb: 3 }}>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Urine Protein Assessment
-              </Typography>
-              <Chip
-                label={hasUrineParam ? 'Complete' : 'Select One'}
-                color={hasUrineParam ? 'success' : 'warning'}
-                size="small"
-              />
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Alert severity="info" sx={{ mb: 3 }}>
-              <Typography variant="body2">
-                <strong>Choose one:</strong> UACR is preferred. If only UPCR is available, it will be converted to UACR using our validated formula.
-              </Typography>
-            </Alert>
-            
-            <Grid container spacing={3}>
-              {urineParams.map((param) => {
-                const currentValue = getCurrentValue(param.parameter);
-                const validationStatus = getValidationStatus(param.parameter);
-                
-                return (
-                  <Grid item xs={12} md={6} key={param.parameter}>
-                    <Card variant="outlined" sx={{ height: '100%' }}>
-                      <CardContent>
-                        <Box display="flex" alignItems="center" gap={1} mb={2}>
-                          {param.icon}
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                            {param.label}
-                          </Typography>
-                          <Tooltip title={param.description}>
-                            <IconButton size="small">
-                              <Info fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          {validationStatus === 'success' && <CheckCircle color="success" fontSize="small" />}
-                          {validationStatus === 'warning' && <Warning color="warning" fontSize="small" />}
-                          {validationStatus === 'error' && <Error color="error" fontSize="small" />}
-                        </Box>
-                        
-                        <Box display="flex" gap={2} mb={2}>
-                          <TextField
-                            label="Value"
-                            type="number"
-                            value={currentValue?.value || ''}
-                            onChange={(e) => handleValueChange(param.parameter, e.target.value)}
-                            inputProps={{ step: 'any', min: 0 }}
-                            sx={{ flex: 1 }}
-                            error={validationStatus === 'error'}
-                          />
-                          
-                          <FormControl sx={{ minWidth: 100 }}>
-                            <InputLabel>Unit</InputLabel>
-                            <Select
-                              value={currentValue?.unit || param.defaultUnit}
-                              onChange={(e) => handleUnitChange(param.parameter, e.target.value)}
-                              label="Unit"
-                            >
-                              {param.units.map((unit) => (
-                                <MenuItem key={unit} value={unit}>
-                                  {unit}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Box>
-                        
-                        <DatePicker
-                          label="Test Date"
-                          value={currentValue?.date ? new Date(currentValue.date) : new Date()}
-                          onChange={(date) => handleDateChange(param.parameter, date)}
-                          maxDate={new Date()}
-                          slotProps={{
-                            textField: {
-                              size: 'small',
-                              fullWidth: true
-                            }
-                          }}
-                        />
-                        
-                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                          Normal range: {param.normalRange}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
 
         {/* Validation Results */}
         {validationResults && validationResults.warnings?.length > 0 && (
@@ -467,13 +466,18 @@ const LabValuesStep: React.FC = () => {
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             <Chip
-              label={`Required Tests: ${completedRequired.length}/${requiredParams.length}`}
+              label={`Required Parameters: ${completedRequired.length}/${requiredParams.length}`}
               color={completedRequired.length === requiredParams.length ? 'success' : 'error'}
               size="small"
             />
             <Chip
-              label={hasUrineParam ? 'Urine Protein: Provided' : 'Urine Protein: Missing'}
-              color={hasUrineParam ? 'success' : 'error'}
+              label={`UACR or UPCR: ${hasUacrOrUpcr ? 'Provided' : 'Missing'}`}
+              color={hasUacrOrUpcr ? 'success' : 'error'}
+              size="small"
+            />
+            <Chip
+              label={`Total Entries: ${labValues.length}`}
+              color="info"
               size="small"
             />
             <Chip
@@ -489,8 +493,8 @@ const LabValuesStep: React.FC = () => {
         {isStepComplete && (
           <Alert severity="info" sx={{ mt: 3 }}>
             <Typography variant="body2">
-              <strong>Next:</strong> Medical history (comorbidities) can be added to improve prediction accuracy, 
-              or you can proceed directly to risk analysis.
+              <strong>Next:</strong> Medical history (comorbidities and diagnosis dates) will be collected to calculate 
+              the Charlson Comorbidity Index and improve prediction accuracy.
             </Typography>
           </Alert>
         )}

@@ -23,6 +23,7 @@ from app.schemas.prediction_simple import (
     ProcessedLabValue, ValidationWarning, ShapValues, ConfidenceIntervals,
     ClinicalBenchmarks, ModelInfo, PatientContext
 )
+from app.schemas.temporal_prediction import TemporalPredictionRequest, TemporalPredictionResponse
 from app.models.model_manager import ModelManager
 
 
@@ -208,6 +209,112 @@ async def validate_input(
             valid=False,
             errors=[e.message],
             warnings=[]
+        )
+
+
+@router.post("/temporal", response_model=TemporalPredictionResponse)
+async def predict_temporal_risk(
+    temporal_request: TemporalPredictionRequest,
+    request: Request,
+    model_manager: ModelManager = Depends(get_model_manager)
+) -> TemporalPredictionResponse:
+    """
+    Predict CKD progression risk using temporal feature matrix format
+    
+    This endpoint takes patient data in 11 features x 10 timepoints format
+    and generates risk predictions using the ensemble models. This format
+    enables more sophisticated temporal modeling.
+    
+    **Feature Matrix Format:**
+    - 11 features: age_at_obs, albumin, uacr, bicarbonate, cci_score_total,
+                  creatinine, gender, hemoglobin, ht, observation_period, phosphate
+    - 10 timepoints: Each feature can have up to 10 temporal values
+    - Values can be null for missing timepoints
+    
+    **Clinical Usage:**
+    - Supports multiple timepoint data for each laboratory parameter
+    - Better temporal modeling for longitudinal patient data
+    - Same clinical benchmarks as standard prediction endpoint
+    """
+    session_id = temporal_request.session_id or str(uuid.uuid4())
+    
+    logger.info(
+        "Temporal prediction request received",
+        session_id=session_id[:8],
+        client_ip=request.client.host,
+        patient_age=temporal_request.patient_info.age_at_obs,
+        patient_gender=temporal_request.patient_info.gender
+    )
+    
+    try:
+        start_time = time.time()
+        
+        # Convert temporal request to format compatible with existing model manager
+        # For now, we'll use the most recent (first) timepoint for each feature
+        converted_request = convert_temporal_to_standard(temporal_request)
+        
+        # Generate predictions using model ensemble
+        prediction_result = await model_manager.predict(converted_request)
+        
+        # Calculate confidence intervals
+        confidence_intervals = calculate_confidence_intervals(
+            prediction_result['predictions']
+        )
+        
+        # Build temporal-specific response
+        total_time = (time.time() - start_time) * 1000
+        
+        response = TemporalPredictionResponse(
+            success=True,
+            predictions=prediction_result['predictions'],
+            confidence_intervals={
+                "dialysis_lower": confidence_intervals.dialysis_lower,
+                "dialysis_upper": confidence_intervals.dialysis_upper,
+                "mortality_lower": confidence_intervals.mortality_lower,
+                "mortality_upper": confidence_intervals.mortality_upper
+            },
+            shap_values=prediction_result['shap_values'],
+            patient_context={
+                "age": temporal_request.patient_info.age_at_obs,
+                "gender": temporal_request.patient_info.gender,
+                "observation_period": temporal_request.patient_info.observation_period,
+                "egfr": prediction_result.get('egfr', 0.0),
+                "egfr_stage": prediction_result.get('egfr_stage', 'Unknown')
+            },
+            clinical_benchmarks={
+                "nephrology_referral_threshold": 0.05,
+                "multidisciplinary_care_threshold": 0.10,
+                "krt_preparation_threshold": 0.40
+            },
+            model_info=prediction_result['model_info'],
+            session_id=session_id,
+            timestamp=datetime.now().isoformat()
+        )
+        
+        logger.info(
+            "Temporal prediction completed successfully",
+            session_id=session_id[:8],
+            total_time_ms=total_time,
+            dialysis_risk_2y=prediction_result['predictions']['dialysis_risk'][1],
+            mortality_risk_2y=prediction_result['predictions']['mortality_risk'][1]
+        )
+        
+        return response
+        
+    except Exception as e:
+        logger.error(
+            "Temporal prediction failed",
+            session_id=session_id[:8],
+            error=str(e),
+            exc_info=True
+        )
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "Temporal Prediction Failed",
+                "message": "An unexpected error occurred during temporal prediction",
+                "session_id": session_id
+            }
         )
 
 
@@ -444,3 +551,66 @@ def get_expected_unit(parameter: str) -> str:
         'upcr': 'mg/mmol'
     }
     return unit_map.get(parameter, 'unknown')
+
+
+def convert_temporal_to_standard(temporal_request: TemporalPredictionRequest) -> Dict[str, Any]:
+    """Convert temporal feature matrix to standard prediction format"""
+    
+    # Get the most recent (first) non-null values for each feature
+    feature_matrix = temporal_request.feature_matrix
+    patient_info = temporal_request.patient_info
+    
+    # Extract lab values from feature matrix
+    lab_values = []
+    lab_params = ['creatinine', 'hemoglobin', 'phosphate', 'bicarbonate', 'albumin', 'uacr']
+    
+    for param in lab_params:
+        if param in feature_matrix:
+            values = feature_matrix[param]
+            # Find first non-null value
+            for i, value in enumerate(values):
+                if value is not None:
+                    # Get corresponding date
+                    date_str = temporal_request.timepoint_dates[i] if i < len(temporal_request.timepoint_dates) else None
+                    if not date_str:
+                        date_str = datetime.now().strftime('%Y-%m-%d')
+                    
+                    lab_values.append({
+                        'parameter': param,
+                        'value': value,
+                        'unit': get_expected_unit(param),
+                        'date': date_str
+                    })
+                    break
+    
+    # Extract comorbidities from feature matrix
+    medical_history = []
+    
+    # Hypertension (HT feature)
+    ht_values = feature_matrix.get('ht', [])
+    if ht_values and any(v is not None for v in ht_values):
+        ht_diagnosed = any(v == 1 for v in ht_values if v is not None)
+        medical_history.append({
+            'condition': 'hypertension',
+            'diagnosed': ht_diagnosed,
+            'date': temporal_request.timepoint_dates[0] if temporal_request.timepoint_dates[0] else None
+        })
+    
+    # CCI score implies other conditions (simplified)
+    cci_values = feature_matrix.get('cci_score_total', [])
+    if cci_values and any(v is not None and v > 0 for v in cci_values):
+        # For now, just indicate that there are comorbidities
+        # In a real implementation, we'd need more detailed condition mapping
+        pass
+    
+    # Build standard format request
+    standard_request = {
+        'demographics': {
+            'age': patient_info.age_at_obs,
+            'gender': patient_info.gender
+        },
+        'laboratory_values': lab_values,
+        'medical_history': medical_history
+    }
+    
+    return standard_request

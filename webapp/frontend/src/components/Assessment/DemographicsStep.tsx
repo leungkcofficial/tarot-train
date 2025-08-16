@@ -234,6 +234,11 @@ const DemographicsStep: React.FC = () => {
               size="small"
             />
             <Chip
+              label={`CKD Diagnosis: ${demographics.ckdDiagnosisDate ? 'Provided' : 'Optional'}`}
+              color="info"
+              size="small"
+            />
+            <Chip
               label={isValid ? 'Ready to proceed' : 'Incomplete'}
               color={isValid ? 'success' : 'warning'}
               size="small"
@@ -242,12 +247,44 @@ const DemographicsStep: React.FC = () => {
           </Box>
         </Box>
 
+        {/* CKD Diagnosis Date */}
+        <Divider sx={{ my: 3 }} />
+        
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Calculate />
+            CKD Diagnosis Date
+          </Typography>
+          
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            When did you first learn that you had CKD (Chronic Kidney Disease)? This is optional - if you don't remember the exact date, leave it blank.
+            The observation period will be calculated from the earliest available date (diagnosis or first lab test).
+          </Typography>
+
+          <DatePicker
+            label="CKD Diagnosis Date"
+            value={demographics.ckdDiagnosisDate || null}
+            onChange={(date) => updateDemographics({ ckdDiagnosisDate: date || undefined })}
+            maxDate={new Date()}
+            minDate={new Date(1980, 0, 1)}
+            slotProps={{
+              textField: {
+                sx: { minWidth: 250 },
+                helperText: demographics.ckdDiagnosisDate 
+                  ? 'This date will help calculate your observation period'
+                  : 'Optional - leave blank if you don\'t remember'
+              }
+            }}
+          />
+        </Box>
+
         {/* Next Steps Preview */}
         {isValid && (
           <Alert severity="info" sx={{ mt: 3 }}>
             <Typography variant="body2">
-              <strong>Next:</strong> Laboratory values (creatinine, hemoglobin, phosphate, bicarbonate, and UACR/UPCR) 
-              will be collected to calculate eGFR and assess CKD progression risk.
+              <strong>Next:</strong> Laboratory values (creatinine, hemoglobin, phosphate, bicarbonate, albumin, and UACR/UPCR) 
+              will be collected to calculate eGFR and assess CKD progression risk. The observation period will be calculated 
+              automatically from your earliest available dates.
             </Typography>
           </Alert>
         )}

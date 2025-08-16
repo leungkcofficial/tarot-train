@@ -9,6 +9,7 @@ import LabValuesStep from '../components/Assessment/LabValuesStep';
 import MedicalHistoryStep from '../components/Assessment/MedicalHistoryStep';
 import { useSession } from '../contexts/SessionContext';
 import { ApiService } from '../services/api';
+import DataTransformationService from '../services/dataTransformation';
 
 /**
  * Assessment page with multi-step form wizard
@@ -27,21 +28,26 @@ const AssessmentPage: React.FC = () => {
     switch (step) {
       case 0: // Demographics
         return state.data.demographics.gender !== '' && 
-               (state.data.demographics.age !== undefined || state.data.demographics.dateOfBirth !== undefined);
+               state.data.demographics.age !== undefined;
       
       case 1: // Laboratory Values
-        const requiredParams = ['creatinine', 'hemoglobin', 'phosphate', 'bicarbonate'];
-        const hasUrine = state.data.labValues.some(lab => ['uacr', 'upcr'].includes(lab.parameter));
+        const requiredParams = ['creatinine', 'hemoglobin', 'phosphate', 'bicarbonate', 'albumin'];
         const hasRequired = requiredParams.every(param =>
-          state.data.labValues.some(lab => lab.parameter === param && lab.value !== '')
+          state.data.labValues.some(lab => lab.parameter === param && lab.value !== '' && lab.value !== 0)
         );
-        return hasRequired && hasUrine;
+        // Check for UACR OR UPCR - at least one is required
+        const hasUacrOrUpcr = 
+          state.data.labValues.some(lab => lab.parameter === 'uacr' && lab.value !== '' && lab.value !== 0) ||
+          state.data.labValues.some(lab => lab.parameter === 'upcr' && lab.value !== '' && lab.value !== 0);
+        
+        return hasRequired && hasUacrOrUpcr;
       
-      case 2: // Medical History (optional)
-        return true;
+      case 2: // Medical History - Hypertension status is required
+        const hasHypertension = state.data.comorbidities.some(c => c.condition === 'hypertension');
+        return hasHypertension;
       
       case 3: // Prediction
-        return isStepValid(0) && isStepValid(1);
+        return isStepValid(0) && isStepValid(1) && isStepValid(2);
       
       default:
         return false;
@@ -69,44 +75,43 @@ const AssessmentPage: React.FC = () => {
     setError(null);
 
     try {
-      // Validate required fields
-      if (!state.data.demographics.gender || (state.data.demographics.gender !== 'male' && state.data.demographics.gender !== 'female')) {
-        setError('Gender selection is required');
+      // Validate using the new data transformation service
+      const transformedRequest = DataTransformationService.transformToFeatureMatrix(
+        state.data.demographics,
+        state.data.labValues,
+        state.data.comorbidities
+      );
+
+      // Validate feature matrix completeness
+      const validationErrors = DataTransformationService.validateFeatureMatrix(transformedRequest);
+      if (validationErrors.length > 0) {
+        setError(`Validation errors: ${validationErrors.join(', ')}`);
         setIsLoading(false);
         return;
       }
 
-      // Prepare request data
-      const requestData = {
-        demographics: {
-          age: state.data.demographics.age,
-          date_of_birth: state.data.demographics.dateOfBirth?.toISOString().split('T')[0],
-          gender: state.data.demographics.gender as 'male' | 'female'
-        },
-        laboratory_values: state.data.labValues
-          .filter(lab => typeof lab.value === 'number' && lab.value !== '' && lab.value !== null && lab.value !== undefined)
-          .map(lab => ({
-            parameter: lab.parameter,
-            value: lab.value as number,
-            unit: lab.unit,
-            date: lab.date.toISOString().split('T')[0]
-          })),
-        medical_history: state.data.comorbidities.map(mh => ({
-          condition: mh.condition,
-          diagnosed: mh.diagnosed,
-          date: mh.date?.toISOString().split('T')[0]
-        }))
-      };
+      // Add session ID if available
+      if (state.data.sessionId) {
+        transformedRequest.session_id = state.data.sessionId;
+      }
 
-      // Generate prediction
-      const prediction = await ApiService.predictRisk(requestData);
+      // Debug: log feature matrix summary
+      if (process.env.NODE_ENV === 'development') {
+        const summary = DataTransformationService.getFeatureMatrixSummary(transformedRequest.feature_matrix);
+        console.log('Feature Matrix Summary:', summary);
+        console.log('Transformed Request:', transformedRequest);
+      }
+
+      // Generate prediction using temporal API
+      const prediction = await ApiService.predictTemporalRisk(transformedRequest);
       
       // Store prediction and navigate to results
       setPrediction(prediction);
       navigate('/results');
 
     } catch (err: any) {
-      setError(err.message || 'Failed to generate prediction. Please try again.');
+      console.error('Prediction error:', err);
+      setError(err.message || 'Failed to generate prediction. Please check your input and try again.');
     } finally {
       setIsLoading(false);
     }
