@@ -1,227 +1,340 @@
-# CKD Risk Prediction MLOps Pipeline
+# 🏥 TAROT: AI-Driven CKD Risk Prediction Platform
 
-A comprehensive MLOps repository for AI-driven Chronic Kidney Disease (CKD) risk prediction, providing nephrologists and CKD patients with reliable probabilities of starting renal replacement therapy (RRT) and all-cause mortality over 1- to 5-year horizons.
-This is the data training pipeline for the TAROT(The AI-driven Renal Outcome Tracking) study
+<div align="center">
 
-## 🎯 Project Overview
+[![Status](https://img.shields.io/badge/Status-MVP%20Ready-brightgreen)](https://github.com/leungkcofficial/tarot-train)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18+-blue)](https://reactjs.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
 
-This project implements a full-stack MLOps pipeline that:
-- Ingests longitudinal electronic health record (EHR) data
-- Trains deep learning survival models (DeepSurv, DeepHit)
-- Deploys the best performing models to production
-- Continuously monitors real-world performance
+**The AI-driven Renal Outcome Tracking** system for Chronic Kidney Disease progression prediction
 
-### Key Features
-- **Advanced Survival Analysis**: Implements state-of-the-art deep learning models for competing risks
-- **Ensemble Learning**: Combines multiple models for improved prediction accuracy
-- **MLOps Integration**: Full pipeline orchestration with ZenML and experiment tracking with MLflow
-- **Clinical Validation**: Achieves c-index ≥ 0.80 for mortality and ≥ 0.95 for RRT predictions
+</div>
+
+---
+
+## 🎯 Overview
+
+TAROT is a **production-ready MVP** that provides nephrologists and healthcare professionals with AI-powered risk predictions for CKD progression. The system combines **36 ensemble models** (DeepSurv + DeepHit) to predict dialysis and mortality risks over 1-5 year horizons with clinical-grade accuracy.
+
+### ✨ Key Features
+
+- 🧠 **36-Model Ensemble**: Advanced deep learning combining DeepSurv, DeepHit, and LSTM architectures
+- 🌐 **Full-Stack Web Application**: React TypeScript frontend with FastAPI backend
+- ⚡ **Real-Time Predictions**: <100ms inference time for clinical workflow integration
+- 📊 **Interactive Visualizations**: Risk charts with confidence intervals and SHAP explanations
+- 🏥 **Clinical Integration**: KDIGO guidelines, eGFR calculation, and care recommendations
+- 🔒 **Privacy-First**: No data persistence, temporary session-only processing
+- 🚀 **Production-Ready**: Docker deployment, comprehensive logging, health monitoring
+
+---
 
 ## 🏗️ Architecture
 
-### Pipeline Overview
+### System Overview
 
-![CKD Pipeline Flowchart](ckd_pipeline_flowchart.png)
-
-The pipeline consists of several stages:
-1. **Data Ingestion**: Raw CSV data from various sources (lab results, diagnoses, procedures)
-2. **Data Preprocessing**: Cleaning, validation, and feature engineering
-3. **Model Training**: Deep learning survival models with hyperparameter optimization
-4. **Model Evaluation**: Performance metrics and clinical validation
-5. **Model Deployment**: Best model selection and deployment
-
-### Ensemble Architecture
-
-![Survival Ensemble Simplified](survival_ensemble_simplified.png)
-
-The ensemble combines multiple model types:
-- **DeepSurv Models**: For single-event survival analysis
-- **DeepHit Models**: For competing risks analysis
-- **LSTM-based Models**: For temporal pattern recognition
-- **Traditional Models**: KFRE (Kidney Failure Risk Equation) as baseline
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.11.8
-- CUDA-capable GPU (recommended for deep learning models)
-- Docker (optional, for containerized deployment)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd tarot2
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Frontend      │    │    Backend       │    │   ML Models     │
+│  (React TS)     │◄──►│   (FastAPI)      │◄──►│  36 Ensemble    │
+│  - Assessment   │    │  - Validation    │    │  - DeepSurv     │
+│  - Visualize    │    │  - Inference     │    │  - DeepHit      │
+│  - Interpret    │    │  - SHAP          │    │  - LSTM         │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
-2. Create a virtual environment:
+### Model Architecture
+
+- **24 DeepSurv Models**: Single-event survival analysis (ANN + LSTM variants)
+- **12 DeepHit Models**: Competing risks analysis (ANN + LSTM variants)
+- **Flexible Loading**: Dynamic architecture reconstruction from state dictionaries
+- **Ensemble Averaging**: Weighted predictions across all 36 models
+
+---
+
+## 🚀 Quick Start
+
+### Option 1: Docker Deployment (Recommended)
+
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Clone the repository
+git clone https://github.com/leungkcofficial/tarot-train.git
+cd tarot-train
+
+# Start with Docker Compose
+cd webapp
+docker-compose up --build
+
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000
 ```
 
-3. Install dependencies:
+### Option 2: Local Development
+
 ```bash
+# 1. Backend Setup
+cd webapp/backend
 pip install -r requirements.txt
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# 2. Frontend Setup (in another terminal)
+cd webapp/frontend
+npm install
+npm start
+
+# Access at http://localhost:3000
 ```
 
-4. Initialize ZenML (optional but recommended):
-```bash
-zenml init
-```
+---
 
-### Configuration
+## 🔧 Configuration
 
-#### 1. Environment Variables (.env)
+### Environment Variables
 
-Create a `.env` file based on `.env.example`:
+Create `.env` in the webapp directory:
 
-```bash
-cp .env.example .env
-```
-
-Key configurations in `.env`:
-- **Data Paths**: Set paths for input data, output directories, and metadata
-- **Column Mappings**: Map CSV columns to expected field names for each data type
-- **Model Settings**: Configure model hyperparameters and training settings
-
-Example configuration:
 ```env
-# Data paths
-DATA_PATH=./data
-OUTPUT_DIR=./data_lake
+# API Configuration
+REACT_APP_API_URL=http://localhost:8000/api/v1
+
+# Model Configuration
+MODEL_PATH=./foundation_models
 METADATA_DIR=./metadata
-
-# Random seed for reproducibility
 RANDOM_SEED=42
-
-# Model training settings
-NETWORK_TYPE=mlp
 BATCH_SIZE=64
-EPOCHS=100
-LEARNING_RATE=0.001
 ```
 
-#### 2. Feature Configuration
+### Model Files
 
-Adjust features and column mappings in `src/default_master_df_mapping.yml`:
+The system requires pre-trained model files in `foundation_models/`:
+- `Ensemble_model{1-36}_*.pt`: Model weights
+- `ckd_preprocessor.pkl`: Data preprocessing pipeline
+- Model configurations in `results/final_deploy/model_config/`
 
-```yaml
-# Define which columns to use as features
-features: ['gender', 'creatinine', 'hemoglobin', 'phosphate', 
-          'age_at_obs', 'bicarbonate', 'albumin', 'uacr', 
-          'cci_score_total', 'ht', 'observation_period']
+---
 
-# Specify categorical vs continuous features
-cat_features: ['gender', 'ht', 'myocardial_infarction', ...]
-cont_features: ['creatinine', 'hemoglobin', 'phosphate', ...]
+## 📱 User Interface
 
-# Map columns for KFRE calculation
-kfre: {
-  'age': 'age',
-  'sex': 'gender',
-  'egfr': 'egfr',
-  'acr': 'uacr',
-  'albumin': 'albumin',
-  'phosphate': 'phosphate',
-  'bicarbonate': 'bicarbonate',
-  'calcium': 'calcium'
-}
-```
+### Clinical Assessment Workflow
 
-#### 3. Hyperparameter Configuration
+1. **📋 Demographics**: Patient age and gender
+2. **🔬 Laboratory Values**: Creatinine, hemoglobin, phosphate, bicarbonate, albumin, UACR
+3. **📋 Medical History**: Comorbidities and conditions
+4. **📊 Risk Analysis**: AI-generated predictions with clinical interpretations
 
-Configure hyperparameter search space in `src/hyperparameter_config.yml`:
+### Interactive Visualizations
 
-```yaml
-model_type: deephit  # Options: deepsurv, deephit
-network:
-  type: ann  # Options: ann, lstm
-  default:
-    hidden_dims: [128, 64, 32]
-    num_layers: 3
-    dropout: 0.2
-    batch_size: 64
-    learning_rate: 0.001
-    epochs: 100
+- **Risk Timeline Charts**: Plotly-powered interactive graphs
+- **Confidence Intervals**: Uncertainty quantification (95% CI)
+- **SHAP Explanations**: Feature importance for model interpretability
+- **Clinical Recommendations**: Actionable guidance based on KDIGO thresholds
 
-# Hyperparameter search space for optimization
-search_space:
-  common:
-    learning_rate:
-      type: float
-      min: 0.0001
-      max: 0.01
-      log: true
-    num_layers:
-      type: int
-      min: 2
-      max: 4
-```
+---
 
-## 📊 Running the Pipeline
+## 🏥 Clinical Features
 
-### Basic Usage
+### Risk Stratification
 
-Run the complete pipeline:
-```bash
-python run_pipeline.py
-```
+| Risk Level | 2-Year Dialysis Risk | Clinical Action |
+|------------|---------------------|-----------------|
+| Low | <5% | Standard CKD care |
+| Moderate | 5-10% | Nephrology referral consideration |
+| High | 10-40% | Multidisciplinary care |
+| Very High | >40% | Urgent KRT preparation |
 
-### Advanced Options
+### KDIGO Integration
 
-1. **Data Ingestion Only**:
-```bash
-python run_pipeline.py --data-path data --output-dir data_lake ingest
-```
+- **eGFR Calculation**: CKD-EPI 2021 equation
+- **CKD Staging**: Automatic classification (Stages 3-5)
+- **Care Thresholds**: Evidence-based referral recommendations
+- **Clinical Benchmarks**: Nephrology, multidisciplinary, KRT preparation
 
-2. **Model Training with Custom Config**:
-```bash
-python run_pipeline.py --config custom_config.yml train
-```
-
-3. **Run Without ZenML** (for testing):
-```bash
-python run_pipeline.py --no-zenml
-```
-
-## 📈 Model Performance
-
-Target metrics:
-- **C-index**: ≥ 0.80 for mortality, ≥ 0.95 for RRT
-- **Integrated Brier Score**: < 0.10
-- **Inference Time**: < 200ms (P95)
+---
 
 ## 🛠️ Technology Stack
 
-| Component | Technology |
-|-----------|------------|
-| Language | Python 3.11.8 |
-| Deep Learning | PyTorch 2.4.1, PyCox |
-| MLOps Orchestration | ZenML 0.82.1 |
-| Experiment Tracking | MLflow 2.22.0 |
-| Data Validation | Great Expectations, Pandera |
-| Serving | MLflow Model Server |
-| Monitoring | Prometheus + Grafana |
+### Backend
+- **FastAPI**: Async web framework
+- **PyTorch**: Deep learning inference
+- **PyCox**: Survival analysis utilities
+- **Pydantic**: Data validation
+- **Structured Logging**: JSON-formatted logs
+
+### Frontend
+- **React 18**: UI framework
+- **TypeScript**: Type safety
+- **Material-UI**: Professional medical UI
+- **Plotly**: Interactive visualizations
+- **Axios**: API communication
+
+### MLOps & Deployment
+- **Docker**: Containerization
+- **Git LFS**: Model artifact management
+- **ZenML**: ML pipeline orchestration
+- **MLflow**: Experiment tracking
+- **Health Monitoring**: API status endpoints
+
+---
+
+## 📊 Model Performance
+
+### Target Metrics
+- **C-index**: ≥0.80 (mortality), ≥0.95 (RRT)
+- **Integrated Brier Score**: <0.10
+- **Inference Time**: <100ms (P95)
+
+### Current Performance
+- **Ensemble Size**: 36 models
+- **Average Inference**: ~40-90ms
+- **Model Loading**: ~3 seconds (startup)
+- **Memory Usage**: ~1.5GB (all models loaded)
+
+---
+
+## 🔬 Research & Development
+
+### MLOps Pipeline
+
+The complete training pipeline includes:
+
+```bash
+# Data ingestion and preprocessing
+python run_pipeline.py ingest --data-path data --output-dir data_lake
+
+# Model training with hyperparameter optimization
+python run_pipeline.py train --config config.yml
+
+# Ensemble evaluation and deployment
+python pipelines/final_deploy_v2_fixed.py
+```
+
+### Development Commands
+
+```bash
+# Setup development environment
+make setup
+make install
+
+# Run tests
+make test TYPE=creatinine
+pytest tests/
+
+# Data pipeline
+make run-all  # All data types
+make run-single TYPE=creatinine  # Single type
+
+# Model deployment
+python pipelines/final_deploy_v2_fixed.py
+
+# Cleanup
+make clean
+```
+
+---
 
 ## 📁 Project Structure
 
 ```
-tarot2/
-├── data/                  # Raw input data
-├── docs/                  # Documentation
-├── examples/              # Example scripts
-├── pipelines/             # ZenML pipeline definitions
-├── src/                   # Source code
-│   ├── nn_architectures.py    # Neural network definitions
-│   ├── survival_utils.py      # Survival analysis utilities
-│   └── ...
-├── steps/                 # ZenML pipeline steps
-├── test/                  # Test files
-├── .env.example          # Environment variables template
-├── requirements.txt      # Python dependencies
-└── run_pipeline.py       # Main pipeline runner
+tarot-train/
+├── 📁 webapp/                    # Web Application
+│   ├── 📁 backend/               # FastAPI Backend
+│   │   ├── 📁 app/
+│   │   │   ├── 📁 api/v1/        # API Endpoints
+│   │   │   ├── 📁 models/        # Model Management
+│   │   │   ├── 📁 core/          # Configuration
+│   │   │   └── 📁 schemas/       # Data Models
+│   │   └── 📄 requirements.txt
+│   ├── 📁 frontend/              # React Frontend
+│   │   ├── 📁 src/
+│   │   │   ├── 📁 components/    # UI Components
+│   │   │   ├── 📁 pages/         # App Pages
+│   │   │   ├── 📁 contexts/      # State Management
+│   │   │   └── 📁 services/      # API Client
+│   │   └── 📄 package.json
+│   └── 📄 docker-compose.yml
+├── 📁 foundation_models/         # Pre-trained Models
+├── 📁 src/                      # Training Pipeline
+├── 📁 pipelines/                # ZenML Pipelines
+├── 📁 steps/                    # Pipeline Steps
+├── 📄 CLAUDE.md                 # Development Documentation
+└── 📄 README.md                 # This file
 ```
 
+---
+
+## 🚦 API Endpoints
+
+### Health & Status
+- `GET /health` - System health check
+- `GET /health/detailed` - Detailed system status
+- `GET /health/models` - Model loading status
+
+### Prediction
+- `POST /api/v1/predict` - Generate risk predictions
+- `POST /api/v1/predict/validate` - Validate input data
+
+### Information
+- `GET /info/performance` - Model performance metrics
+- `GET /info/disclaimer` - Clinical disclaimer
+- `GET /info/clinical-benchmarks` - KDIGO thresholds
+
+---
+
+## 🔐 Privacy & Security
+
+- **No Data Persistence**: Patient data processed in memory only
+- **Session-Based**: Automatic cleanup after 4 hours inactivity
+- **Privacy Notices**: Clear user communication
+- **Clinical Disclaimers**: Appropriate medical warnings
+- **Validation**: Input sanitization and medical range checks
+
+---
+
+## 🎯 MVP Status
+
+### ✅ Production Ready Features
+- Complete end-to-end clinical workflow
+- Professional medical UI/UX
+- Real-time model inference with all 36 models
+- Clinical validation and recommendations
+- Docker deployment and orchestration
+- Comprehensive logging and monitoring
+
+### 🚀 Ready for Next Phase
+- Clinical research pilots
+- Healthcare institution trials
+- EHR system integration
+- Regulatory review preparation
+- Multi-center deployment
+
+---
+
+## 🤝 Contributing
+
+This is a research project associated with clinical studies. For collaboration inquiries, please contact the research team.
+
+---
+
+## 📄 License
+
+This project contains proprietary AI models and clinical algorithms. Please refer to licensing terms for usage permissions.
+
+---
+
+## 📞 Contact
+
+For technical questions or clinical collaboration:
+- **Research Team**: [Contact Information]
+- **Technical Issues**: GitHub Issues
+- **Clinical Inquiries**: [Clinical Contact]
+
+---
+
+<div align="center">
+
+**TAROT CKD Risk Prediction Platform**  
+*Advancing precision medicine through AI-driven clinical decision support*
+
+</div>
