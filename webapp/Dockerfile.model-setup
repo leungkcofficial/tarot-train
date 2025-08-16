@@ -1,0 +1,16 @@
+# Model Setup Container for existing TAROT models
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install required packages
+RUN pip install --no-cache-dir numpy
+
+# Copy model configuration script
+COPY scripts/setup_existing_models.py ./setup_existing_models.py
+
+# Make script executable
+RUN chmod +x setup_existing_models.py
+
+# Default command
+CMD ["python", "setup_existing_models.py"]

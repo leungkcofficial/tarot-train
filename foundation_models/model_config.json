@@ -1,0 +1,428 @@
+{
+  "model_version": "2.0.0",
+  "created_at": "2025-01-15T00:00:00Z",
+  "total_models": 36,
+  "ensemble_models": [
+    {
+      "id": 1,
+      "name": "ensemble_model_1",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model10_DeepSurv_ANN_Event_1_20250804_224739.pt",
+      "baseline_hazards_path": "baseline_hazards_model10_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.08
+    },
+    {
+      "id": 2,
+      "name": "ensemble_model_2",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model11_DeepSurv_ANN_Event_2_20250804_232111.pt",
+      "baseline_hazards_path": "baseline_hazards_model11_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.09
+    },
+    {
+      "id": 3,
+      "name": "ensemble_model_3",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model12_DeepSurv_ANN_Event_2_20250804_234627.pt",
+      "baseline_hazards_path": "baseline_hazards_model12_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.05
+    },
+    {
+      "id": 4,
+      "name": "ensemble_model_4",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model13_DeepSurv_LSTM_Event_1_20250804_235851.pt",
+      "baseline_hazards_path": "baseline_hazards_model13_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.21
+    },
+    {
+      "id": 5,
+      "name": "ensemble_model_5",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model14_DeepSurv_LSTM_Event_1_20250805_000424.pt",
+      "baseline_hazards_path": "baseline_hazards_model14_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.57
+    },
+    {
+      "id": 6,
+      "name": "ensemble_model_6",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model15_DeepSurv_LSTM_Event_2_20250805_000820.pt",
+      "baseline_hazards_path": "baseline_hazards_model15_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.55
+    },
+    {
+      "id": 7,
+      "name": "ensemble_model_7",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model16_DeepSurv_LSTM_Event_2_20250805_001010.pt",
+      "baseline_hazards_path": "baseline_hazards_model16_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.68
+    },
+    {
+      "id": 8,
+      "name": "ensemble_model_8",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model17_DeepSurv_LSTM_Event_1_20250805_001337.pt",
+      "baseline_hazards_path": "baseline_hazards_model17_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.88
+    },
+    {
+      "id": 9,
+      "name": "ensemble_model_9",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model18_DeepSurv_LSTM_Event_1_20250805_001815.pt",
+      "baseline_hazards_path": "baseline_hazards_model18_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.35
+    },
+    {
+      "id": 10,
+      "name": "ensemble_model_10",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model19_DeepSurv_LSTM_Event_2_20250805_002409.pt",
+      "baseline_hazards_path": "baseline_hazards_model19_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 2.7
+    },
+    {
+      "id": 11,
+      "name": "ensemble_model_11",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model1_DeepSurv_ANN_Event_1_20250804_111238.pt",
+      "baseline_hazards_path": "baseline_hazards_model1_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.08
+    },
+    {
+      "id": 12,
+      "name": "ensemble_model_12",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model20_DeepSurv_LSTM_Event_2_20250805_002703.pt",
+      "baseline_hazards_path": "baseline_hazards_model20_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.53
+    },
+    {
+      "id": 13,
+      "name": "ensemble_model_13",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model21_DeepSurv_LSTM_Event_1_20250805_003835.pt",
+      "baseline_hazards_path": "baseline_hazards_model21_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.84
+    },
+    {
+      "id": 14,
+      "name": "ensemble_model_14",
+      "type": "deepsurv_lstm",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model22_DeepSurv_LSTM_Event_1_20250805_005046.pt",
+      "baseline_hazards_path": "baseline_hazards_model22_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.69
+    },
+    {
+      "id": 15,
+      "name": "ensemble_model_15",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model23_DeepSurv_LSTM_Event_2_20250805_005844.pt",
+      "baseline_hazards_path": "baseline_hazards_model23_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.48
+    },
+    {
+      "id": 16,
+      "name": "ensemble_model_16",
+      "type": "deepsurv_lstm",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model24_DeepSurv_LSTM_Event_2_20250805_010824.pt",
+      "baseline_hazards_path": "baseline_hazards_model24_20250805.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.71
+    },
+    {
+      "id": 17,
+      "name": "ensemble_model_17",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model25_DeepHit_ANN_Both_20250805_184403.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.32
+    },
+    {
+      "id": 18,
+      "name": "ensemble_model_18",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model26_DeepHit_ANN_Both_20250806_165214.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.25
+    },
+    {
+      "id": 19,
+      "name": "ensemble_model_19",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model27_DeepHit_ANN_Both_20250806_215927.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.29
+    },
+    {
+      "id": 20,
+      "name": "ensemble_model_20",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model28_DeepHit_ANN_Both_20250806_234621.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.1
+    },
+    {
+      "id": 21,
+      "name": "ensemble_model_21",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model29_DeepHit_ANN_Both_20250807_080119.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.22
+    },
+    {
+      "id": 22,
+      "name": "ensemble_model_22",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model2_DeepSurv_ANN_Event_1_20250804_122147.pt",
+      "baseline_hazards_path": "baseline_hazards_model2_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.08
+    },
+    {
+      "id": 23,
+      "name": "ensemble_model_23",
+      "type": "deephit_ann",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model30_DeepHit_ANN_Both_20250807_164222.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.26
+    },
+    {
+      "id": 24,
+      "name": "ensemble_model_24",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model31_DeepHit_LSTM_Both_20250807_170228.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.49
+    },
+    {
+      "id": 25,
+      "name": "ensemble_model_25",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model32_DeepHit_LSTM_Both_20250807_170924.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 1.16
+    },
+    {
+      "id": 26,
+      "name": "ensemble_model_26",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model33_DeepHit_LSTM_Both_20250807_171238.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.78
+    },
+    {
+      "id": 27,
+      "name": "ensemble_model_27",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model34_DeepHit_LSTM_Both_20250807_172356.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 1.06
+    },
+    {
+      "id": 28,
+      "name": "ensemble_model_28",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model35_DeepHit_LSTM_Both_20250807_173219.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 2.52
+    },
+    {
+      "id": 29,
+      "name": "ensemble_model_29",
+      "type": "deephit_lstm",
+      "event_type": "both",
+      "pytorch_model_path": "Ensemble_model36_DeepHit_LSTM_Both_20250807_173649.pt",
+      "baseline_hazards_path": null,
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.73
+    },
+    {
+      "id": 30,
+      "name": "ensemble_model_30",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model3_DeepSurv_ANN_Event_2_20250804_134156.pt",
+      "baseline_hazards_path": "baseline_hazards_model3_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.06
+    },
+    {
+      "id": 31,
+      "name": "ensemble_model_31",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model4_DeepSurv_ANN_Event_2_20250804_145011.pt",
+      "baseline_hazards_path": "baseline_hazards_model4_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.05
+    },
+    {
+      "id": 32,
+      "name": "ensemble_model_32",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model5_DeepSurv_ANN_Event_1_20250804_161902.pt",
+      "baseline_hazards_path": "baseline_hazards_model5_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.07
+    },
+    {
+      "id": 33,
+      "name": "ensemble_model_33",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model6_DeepSurv_ANN_Event_1_20250804_165334.pt",
+      "baseline_hazards_path": "baseline_hazards_model6_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.04
+    },
+    {
+      "id": 34,
+      "name": "ensemble_model_34",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model7_DeepSurv_ANN_Event_2_20250804_172959.pt",
+      "baseline_hazards_path": "baseline_hazards_model7_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.09
+    },
+    {
+      "id": 35,
+      "name": "ensemble_model_35",
+      "type": "deepsurv_ann",
+      "event_type": "mortality",
+      "pytorch_model_path": "Ensemble_model8_DeepSurv_ANN_Event_2_20250804_180641.pt",
+      "baseline_hazards_path": "baseline_hazards_model8_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.05
+    },
+    {
+      "id": 36,
+      "name": "ensemble_model_36",
+      "type": "deepsurv_ann",
+      "event_type": "dialysis",
+      "pytorch_model_path": "Ensemble_model9_DeepSurv_ANN_Event_1_20250804_203104.pt",
+      "baseline_hazards_path": "baseline_hazards_model9_20250804.pkl",
+      "weight": 0.027777777777777776,
+      "file_size_mb": 0.1
+    }
+  ],
+  "preprocessor": {
+    "available": true,
+    "path": "ckd_preprocessor.pkl",
+    "type": "sklearn_preprocessor"
+  },
+  "sequence_cache": {
+    "available": true,
+    "path": "sequence_cache/"
+  },
+  "feature_names": [
+    "age",
+    "gender",
+    "egfr",
+    "hemoglobin",
+    "phosphate",
+    "bicarbonate",
+    "uacr",
+    "charlson_score",
+    "diabetes",
+    "hypertension",
+    "cardiovascular_disease",
+    "malignancy",
+    "liver_disease",
+    "lung_disease"
+  ],
+  "model_architecture": {
+    "ensemble_type": "mixed",
+    "deepsurv_models": 24,
+    "deephit_models": 12,
+    "ann_models": 18,
+    "lstm_models": 18
+  },
+  "inference_config": {
+    "batch_size": 32,
+    "max_sequence_length": 10,
+    "time_horizons": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "output_events": [
+      "dialysis",
+      "mortality"
+    ]
+  },
+  "validation_metrics": {
+    "temporal_validation": {
+      "c_index_dialysis": 0.851,
+      "c_index_mortality": 0.823,
+      "brier_score_dialysis": 0.019,
+      "brier_score_mortality": 0.034
+    },
+    "spatial_validation": {
+      "c_index_dialysis": 0.773,
+      "c_index_mortality": 0.756,
+      "brier_score_dialysis": 0.054,
+      "brier_score_mortality": 0.087
+    }
+  }
+}

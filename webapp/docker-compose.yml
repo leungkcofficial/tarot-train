@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tarot-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount your existing models directory (foundation_models)
+      - ../foundation_models:/app/models:ro
+      # Mount logs directory for persistent logging
+      - ./logs:/app/logs
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - MODEL_PATH=/app/models
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - tarot-network
+
+  # Frontend Web Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=http://localhost:8000/api/v1
+    container_name: tarot-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api/v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - tarot-network
+    depends_on:
+      - backend
+
+  # Model Setup (Optional - creates config for existing models)
+  model-setup:
+    build:
+      context: .
+      dockerfile: Dockerfile.model-setup
+    container_name: tarot-model-setup
+    volumes:
+      - ../foundation_models:/app/models
+    networks:
+      - tarot-network
+    restart: "no"  # Run once only
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: tarot-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl:ro  # Mount SSL certificates if available
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - tarot-network
+    profiles:
+      - production
+    restart: unless-stopped
+
+networks:
+  tarot-network:
+    driver: bridge
+
+volumes:
+  models-data:
+    driver: local
+  logs-data:
+    driver: local
